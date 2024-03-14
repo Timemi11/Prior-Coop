@@ -79,11 +79,11 @@ public class Vaccine {
                         if (Integer.parseInt(dd) > 30
                                 && (MMMM.equals("เมษายน") || MMMM.equals("มิถุนายน") || MMMM.equals("กันยายน"))
                                 || MMMM.equals("พฤศจิกายน")) {
-                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง เดือนนี้ไม่มีวันที่ 31");
+                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง เดือนที่ลงท้ายด้วย \"ยน\" ไม่มีวันที่ 31");
                         }
                         if (Integer.parseInt(dd) >= 29 && MMMM.equals("กุมภาพันธ์")
                                 && !((yyy % 4 == 0 && yyy % 100 != 0) || (yyy % 400 == 0))) {
-                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง ไม่ใช่ปีอสุรทิน");
+                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง ปีนี้ไม่ใช่ปีอสุรทิน");
                         }
                         dateofbirth = dd + " " + MMMM + " " + yyyy;
                     } else {
