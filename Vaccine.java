@@ -40,32 +40,51 @@ public class Vaccine {
             String gender = in.next();
             String dateofbirth = in.nextLine();
             String dd, MMMM, yyyy;
-            String[] words = dateofbirth.split("\\s+");
+            String[] words = dateofbirth.split("\\s");
             java.util.regex.Pattern pattern = java.util.regex.Pattern
                     .compile("^(\\d{1,2}) ([ก-๙]+) พ.ศ.(\\d{4})$");
 
             try {
-                if (words.length > 1) { // เช็คว่า array มีเนื่อหาข้างในอยู่แน่ๆ แล้วใส่ day month year
+                if (words.length > 1 && (gender.equals("หญิง") || gender.equals("ชาย"))) { // เช็คว่า array
+                    // มีเนื่อหาข้างในอยู่แน่ๆ
+                    // แล้วใส่ day month
+                    // year
                     // เข้าไปในตัวแปรตามลำดับ
                     dd = words[2];
                     MMMM = words[3];
                     yyyy = words[4];
-                    int yyy = Integer.parseInt(yyyy.substring(4)) - 543;
-                    yyyy = "พ.ศ." + yyy;
-                    if (Integer.parseInt(dd) > 31) {
-                        throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง ไม่มีวันที่มากกว่า 31 ในแต่ละเดือน");
-                    }
-                    if (Integer.parseInt(dd) > 30
-                            && (MMMM.equals("เมษายน") || MMMM.equals("มิถุนายน") || MMMM.equals("กันยายน"))
-                            || MMMM.equals("พฤศจิกายน")) {
-                        throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง เดือนนี้ไม่มีวันที่ 31");
-                    }
-                    if (Integer.parseInt(dd) >= 29 && MMMM.equals("กุมภาพันธ์")
-                            && !((yyy % 4 == 0 && yyy % 100 != 0) || (yyy % 400 == 0))) {
-                        throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง ไม่ใช่ปีที่มีวันมากกว่า 28 กุมภาพันธ์");
-                    }
 
-                    dateofbirth = dd + " " + MMMM + " " + yyyy;
+                    if (pattern.matcher(dd + " " + MMMM + " " + yyyy).matches()) {
+
+                        int yyy = Integer.parseInt(yyyy.substring(4)) - 543;
+                        yyyy = "พ.ศ." + yyy;
+
+                        if (2564 - (yyy + 543) >= 120) {
+                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง วันเกิดคนที่กรอกมีมากกว่า 120 ปี");
+                        }
+                        if (2564 - (yyy + 543) < 0) {
+                            throw new Exception(
+                                    "กรุณากรอกวันที่ให้ถูกต้อง อายุคนที่กรอกมีมากกว่าปีหรือช่วงที่รับวัคซีน");
+                        }
+                        if (Integer.parseInt(dd) > 31) {
+                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง ไม่มีวันที่มากกว่า 31 ในแต่ละเดือน");
+                        }
+                        if (Integer.parseInt(dd) > 30
+                                && (MMMM.equals("เมษายน") || MMMM.equals("มิถุนายน") || MMMM.equals("กันยายน"))
+                                || MMMM.equals("พฤศจิกายน")) {
+                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง เดือนนี้ไม่มีวันที่ 31");
+                        }
+                        if (Integer.parseInt(dd) >= 29 && MMMM.equals("กุมภาพันธ์")
+                                && !((yyy % 4 == 0 && yyy % 100 != 0) || (yyy % 400 == 0))) {
+                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง ไม่ใช่ปีที่มีวันมากกว่า 28 กุมภาพันธ์");
+                        }
+                        dateofbirth = dd + " " + MMMM + " " + yyyy;
+                    } else {
+                        throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง");
+                    }
+                } else {
+
+                    throw new Exception("กรุณากรอกข้อมูลให้ถูกต้อง");
                 }
 
             } catch (Exception e) {
@@ -94,115 +113,107 @@ public class Vaccine {
             // System.out.println(period.getYears() + "ปี");
             // นำ ว/ด/ปี มาเก็บเอาไว้ในตัวแปร ซึ่งอยู่ในรูปแบบตัวเลข เช่น 2002-09-02
 
-            if ((gender.equals("ชาย") || gender.equals("หญิง")) && pattern.matcher(dateofbirth).matches()) {
-
-                // อายุตั้งแต่เดือนมิถุนายนเท่ากับ ...
-                if (period.getYears() >= 1) {
-                    // หากมีอายุตั้งแต่ 1 ปีขึ้นไป
+            // อายุตั้งแต่เดือนมิถุนายนเท่ากับ ...
+            if (period.getYears() >= 1) {
+                // หากมีอายุตั้งแต่ 1 ปีขึ้นไป
+                startservice = formatDate(date2);
+                endservice = formatDate(date3);
+                eligible_flag = "Y";
+                notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
+                if (period.getYears() >= 65) {
+                    // อายุ 65 ปีขึ้นไป
                     startservice = formatDate(date2);
                     endservice = formatDate(date3);
                     eligible_flag = "Y";
                     notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
-                    if (period.getYears() >= 65) {
-                        // อายุ 65 ปีขึ้นไป
+                    break;
+                } else if ((period.getYears() == 1 && period.getMonths() == 10) // เข้าเงื่อนไขเด็กที่อายุกำลังหมดเกณฑ์ในช่วงรับวัคซีน
+                        || (period.getYears() == 1 && period.getMonths() == 11)) {
+                    // บวกปีเพิ่มขึ้นไปจนอายุครบ 2 ปี จากนั่นเช็คว่ายังอยู่ในช่วงรับวัคซีนหรือไม่
+                    date1 = date1.plusYears(2);
+                    if (date1.isBefore(date3) && date1.isAfter(date2)) {
+                        date3 = date1;
+                        eligible_flag = "Y";
                         startservice = formatDate(date2);
                         endservice = formatDate(date3);
-                        eligible_flag = "Y";
                         notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
                         break;
-                    } else if ((period.getYears() == 1 && period.getMonths() == 10) // เข้าเงื่อนไขเด็กที่อายุกำลังหมดเกณฑ์ในช่วงรับวัคซีน
-                            || (period.getYears() == 1 && period.getMonths() == 11)) {
-                        // บวกปีเพิ่มขึ้นไปจนอายุครบ 2 ปี จากนั่นเช็คว่ายังอยู่ในช่วงรับวัคซีนหรือไม่
-                        date1 = date1.plusYears(2);
-                        if (date1.isBefore(date3) && date1.isAfter(date2)) {
-                            date3 = date1;
-                            eligible_flag = "Y";
-                            startservice = formatDate(date2);
-                            endservice = formatDate(date3);
-                            notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
-                            break;
-                        }
-                    } else if ((period.getYears() == 64 && period.getMonths() == 10) // ถ้าอายุ64ปี
-                                                                                     // ที่เกิดเดือนมิถุนายนขึ้นไปเข้าเงื่อนไขคนที่อายุกำลังเข้าเกณฑ์ในช่วงรับวัคซีน
-                            || (period.getYears() == 64 && period.getMonths() == 11)) {
+                    }
+                } else if ((period.getYears() == 64 && period.getMonths() == 10) // ถ้าอายุ64ปี
+                                                                                 // ที่เกิดเดือนมิถุนายนขึ้นไปเข้าเงื่อนไขคนที่อายุกำลังเข้าเกณฑ์ในช่วงรับวัคซีน
+                        || (period.getYears() == 64 && period.getMonths() == 11)) {
 
-                        // บวกปีเพิ่มขึ้นไปจนอายุครบ 65 ปี จากนั่นเช็คว่ายังอยู่ในช่วงรับวัคซีนหรือไม่
-                        date1 = date1.plusYears(65);
-                        if (date1.isBefore(date3) && date1.isAfter(date2)) {
-                            date2 = date1;
-                            eligible_flag = "Y";
-                            startservice = formatDate(date2);
-                            endservice = formatDate(date3);
-                            notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
-                            break;
-                        }
-                    } else if (period.getYears() >= 2 && period.getYears() < 65) {
-                        // อายุระหว่าง 2 ปี ถึง 65 ปี
-                        if (period.getYears() == 2 && period.getMonths() == 0 && period.getDays() == 0) { // อายุเท่ากับ
-                                                                                                          // 2ปี 0เดือน
-                                                                                                          // 0วัน
-                            date1 = date1.plusYears(2); // บวกปีเพิ่มขึ้นไปเพื่อเซ็ตวันที่รับและหมดช่วงรับวัคซีน
-                            startservice = formatDate(date1);
-                            endservice = formatDate(date1);
-                            eligible_flag = "Y";
-                            notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
-                            break;
-                        }
-                        date1 = date1.plusYears(65);
-                        eligible_flag = "N";
-                        startservice = null;
-                        endservice = null;
-                        notify = "ไม่สามารถเข้ารับบริการได้ เนื่องจากอายุจะครบ 65 ปี ใน " + formatDate(date1);
-                        break;
-                    }
-                } else if (period.getYears() == 0 && period.getMonths() >= -2) { // อายุ 0 ปีขึ้นไปเข้าเงื่อนไขนี้
-                    // อายุไม่ถึงปี คิดเป็นเดือน
-                    if (period.getMonths() >= 6) {
+                    // บวกปีเพิ่มขึ้นไปจนอายุครบ 65 ปี จากนั่นเช็คว่ายังอยู่ในช่วงรับวัคซีนหรือไม่
+                    date1 = date1.plusYears(65);
+                    if (date1.isBefore(date3) && date1.isAfter(date2)) {
+                        date2 = date1;
                         eligible_flag = "Y";
                         startservice = formatDate(date2);
                         endservice = formatDate(date3);
                         notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
                         break;
-                    } else if (period.getMonths() >= 3 && period.getMonths() <= 5) { // ในเดือนมิถุนายน //
-                                                                                     // เด็กน้อยอายุใกล้เข้าเกณฑ์ในช่วงรับวัคซีนพอดี
-                        date1 = date1.plusMonths(6);// บวกเดือนเพิ่มจนอายุ 6 เดือน
-                        if (date1.isAfter(date2) && date1.isBefore(date3)) { // จากนั่นก็เช็คว่ายังไม่หมดช่วงรับวัคซีนเมื่อถึงอายุ6เดือนแล้ว
-                            eligible_flag = "Y";
-                            startservice = formatDate(date1);
-                            endservice = formatDate(date3);
-                            notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
-                            break;
-                        } else { // พอบวกอายุเดือนเพิ่มแล้วแต่ว่าเกินช่วงรับไปแล้ว เช่น มีนาคม 2564
-                                 // เพราะบวกไปแล้วอยู่ในเดือนกันยายน
-                            eligible_flag = "N";
-                            startservice = null;
-                            endservice = null;
-                            notify = "ไม่สามารถเข้ารับบริการได้ เนื่องจากอายุจะครบ 6 เดือน ใน"
-                                    + formatDate(date1);
-                            break;
-                        }
-                    } else { // ไม่เข้าเกณฑ์ในช่วงรับวัคซีน เช่น เมษายน ถึง สิงหาคม 2564
-                        date1 = date1.plusMonths(6);
-                        eligible_flag = "N";
-                        startservice = null;
-                        endservice = null;
-                        notify = "ไม่สามารถเข้ารับบริการได้ เนื่องจากอายุจะครบ 6 เดือน ใน " + formatDate(date1);
+                    }
+                } else if (period.getYears() >= 2 && period.getYears() < 65) {
+                    // อายุระหว่าง 2 ปี ถึง 65 ปี
+                    if (period.getYears() == 2 && period.getMonths() == 0 && period.getDays() == 0) { // อายุเท่ากับ
+                                                                                                      // 2ปี 0เดือน
+                                                                                                      // 0วัน
+                        date1 = date1.plusYears(2); // บวกปีเพิ่มขึ้นไปเพื่อเซ็ตวันที่รับและหมดช่วงรับวัคซีน
+                        startservice = formatDate(date1);
+                        endservice = formatDate(date1);
+                        eligible_flag = "Y";
+                        notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
                         break;
                     }
-                } else { // เช่น เกิดเลยช่วง มิถุนายน - สิงหาคม 2564
+                    date1 = date1.plusYears(65);
                     eligible_flag = "N";
                     startservice = null;
                     endservice = null;
-                    notify = "ไม่สามารถเข้ารับบริการได้ เนื่องจากวันเกิดเลยช่วงรับวัคซีน";
+                    notify = "ไม่สามารถเข้ารับบริการได้ เนื่องจากอายุจะครบ 65 ปี ใน " + formatDate(date1);
                     break;
                 }
-
-            } else { // ข้อมูลที่ใส่ไม่ตรงกับที่กำหนดไว้
-                System.out.println("----กรุณาใส่ข้อมูลให้ถูกต้อง----");
-                gender = "";
-                dateofbirth = "";
-                continue;
+            } else if (period.getYears() == 0 && period.getMonths() >= -2) { // อายุ 0 ปีขึ้นไปเข้าเงื่อนไขนี้
+                // อายุไม่ถึงปี คิดเป็นเดือน
+                if (period.getMonths() >= 6) {
+                    eligible_flag = "Y";
+                    startservice = formatDate(date2);
+                    endservice = formatDate(date3);
+                    notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
+                    break;
+                } else if (period.getMonths() >= 3 && period.getMonths() <= 5) { // ในเดือนมิถุนายน //
+                                                                                 // เด็กน้อยอายุใกล้เข้าเกณฑ์ในช่วงรับวัคซีนพอดี
+                    date1 = date1.plusMonths(6);// บวกเดือนเพิ่มจนอายุ 6 เดือน
+                    if (date1.isAfter(date2) && date1.isBefore(date3)) { // จากนั่นก็เช็คว่ายังไม่หมดช่วงรับวัคซีนเมื่อถึงอายุ6เดือนแล้ว
+                        eligible_flag = "Y";
+                        startservice = formatDate(date1);
+                        endservice = formatDate(date3);
+                        notify = "เข้ารับบริการได้ตั้งแต่วันที่ " + startservice + " - " + endservice;
+                        break;
+                    } else { // พอบวกอายุเดือนเพิ่มแล้วแต่ว่าเกินช่วงรับไปแล้ว เช่น มีนาคม 2564
+                             // เพราะบวกไปแล้วอยู่ในเดือนกันยายน
+                        eligible_flag = "N";
+                        startservice = null;
+                        endservice = null;
+                        notify = "ไม่สามารถเข้ารับบริการได้ เนื่องจากอายุจะครบ 6 เดือน ใน"
+                                + formatDate(date1);
+                        break;
+                    }
+                } else { // ไม่เข้าเกณฑ์ในช่วงรับวัคซีน เช่น เมษายน ถึง สิงหาคม 2564
+                    date1 = date1.plusMonths(6);
+                    eligible_flag = "N";
+                    startservice = null;
+                    endservice = null;
+                    notify = "ไม่สามารถเข้ารับบริการได้ เนื่องจากอายุจะครบ 6 เดือน ใน " + formatDate(date1);
+                    break;
+                }
+            } else { // เช่น เกิดเลยช่วง มิถุนายน - สิงหาคม 2564
+                eligible_flag = "N";
+                startservice = null;
+                endservice = null;
+                notify = "ไม่สามารถเข้ารับบริการได้ เนื่องจากวันเกิดเลยช่วงรับวัคซีน";
+                break;
             }
+
         }
         // แสดงข้อมูลวันที่รับวัคซีนและวันที่เข้ารับบริการ
         if (eligible_flag.equals("Y")) {
