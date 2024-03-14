@@ -25,8 +25,8 @@ public class Vaccine {
 
         // ====================ส่วน input และ กำหนดวันเข้ารับวัคซีน ====================
         Scanner in = new Scanner(System.in);
-        String start_service = "1 มิถุนายน พ.ศ.2021";
-        String end_service = "31 สิงหาคม พ.ศ.2021";
+        String const_start_service = "1 มิถุนายน พ.ศ.2021";
+        String const_end_service = "31 สิงหาคม พ.ศ.2021";
         String startservice = "1 มิถุนายน พ.ศ.2021";
         String endservice = "31 สิงหาคม พ.ศ.2021";
         String eligible_flag = "N";
@@ -36,13 +36,16 @@ public class Vaccine {
         // int ageYears = 0;
 
         // ====================จบส่วนinput และกำหนดวันเข้ารับวัคซีน ====================
-
-        System.out.println("----โปรดกรอกข้อมูล [เช่น \"หญิง เกิดวันเสาร์ที่ 10 มีนาคม พ.ศ.2545\"]----");
-        System.out.println("ช่วงให้บริการรับวัคซีน" + " " + formatDate(parseDate(start_service)) + " - "
-                + formatDate(parseDate(end_service)));
+        System.out.println("============================================================================");
+        System.out.println("     ช่วงให้บริการรับวัคซีน" + " " + formatDate(parseDate(const_start_service)) + " - "
+                + formatDate(parseDate(const_end_service)));
+        System.out.println("============================================================================");
+        System.out.println("    [โปรดกรอกข้อมูล เช่น \"หญิง เกิดวันเสาร์ที่ 10 มีนาคม พ.ศ.2545\"] ");
+        System.out.println("============================================================================");
 
         // ==================== ส่วนเช็คค่า input ที่ใส่เข้ามา ====================
         while (notify.equals("")) {
+            System.out.print("Input >> ");
             String gender = in.next();
             String dateofbirth = in.nextLine();
             String dd, MMMM, yyyy;
@@ -64,11 +67,11 @@ public class Vaccine {
                         yyyy = "พ.ศ." + yyy;
 
                         if (2564 - (yyy + 543) >= 120) {
-                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง วันเกิดคนที่กรอกมีมากกว่า 120 ปี");
+                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง วันเกิดที่กรอกมีช่วงอายุมากกว่า 120 ปี");
                         }
                         if (2564 - (yyy + 543) < 0) {
                             throw new Exception(
-                                    "กรุณากรอกวันที่ให้ถูกต้อง อายุคนที่กรอกมีมากกว่าปีหรือช่วงที่รับวัคซีน");
+                                    "กรุณากรอกวันที่ให้ถูกต้อง วันเกิดเลยช่วงรับวัคซีน");
                         }
                         if (Integer.parseInt(dd) > 31) {
                             throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง ไม่มีวันที่มากกว่า 31 ในแต่ละเดือน");
@@ -80,7 +83,7 @@ public class Vaccine {
                         }
                         if (Integer.parseInt(dd) >= 29 && MMMM.equals("กุมภาพันธ์")
                                 && !((yyy % 4 == 0 && yyy % 100 != 0) || (yyy % 400 == 0))) {
-                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง ไม่ใช่ปีที่มีวันมากกว่า 28 กุมภาพันธ์");
+                            throw new Exception("กรุณากรอกวันที่ให้ถูกต้อง ไม่ใช่ปีอสุรทิน");
                         }
                         dateofbirth = dd + " " + MMMM + " " + yyyy;
                     } else {
@@ -92,6 +95,7 @@ public class Vaccine {
 
             } catch (Exception e) {
                 System.err.println(e.getMessage());
+                System.out.println("============================================================================");
                 continue;
             }
 
@@ -206,7 +210,7 @@ public class Vaccine {
                         eligible_flag = "N";
                         startservice = null;
                         endservice = null;
-                        notify = "ไม่สามารถเข้ารับบริการได้ เนื่องจากอายุจะครบ 6 เดือน ใน"
+                        notify = "ไม่สามารถเข้ารับบริการได้ เนื่องจากอายุจะครบ 6 เดือน ใน "
                                 + formatDate(date1);
                         break;
                     }
@@ -233,12 +237,28 @@ public class Vaccine {
 
         // ================================ส่วนแสดงข้อมูลวันที่รับวัคซีนและวันที่เข้ารับบริการ================================
         if (eligible_flag.equals("Y")) {
+            System.out.println("============================================================================");
+            System.out.println("                                 [OUTPUT]");
             System.out.println(notify);
+            System.out.println("============================================================================");
+            System.out.println("[Output Parameter]");
+            System.out.println("Eligible Flag: " + eligible_flag);
+            System.out.println("Start_Date: " + startservice);
+            System.out.println("End_Date: " + endservice);
+            System.out.println("============================================================================");
             // System.out.println(
             // "อายุปัจจุบันตอนเดือนมิถุนายน " + ageYears + " ปี " + ageMonths + " เดือน " +
             // ageDays + " วัน");
         } else if (eligible_flag.equals("N")) {
+            System.out.println("============================================================================");
+            System.out.println("                                 [OUTPUT]");
             System.out.println(notify);
+            System.out.println("============================================================================");
+            System.out.println("[Output Parameter]");
+            System.out.println("Eligible Flag: " + eligible_flag);
+            System.out.println("Start_Date: " + startservice);
+            System.out.println("End_Date: " + endservice);
+            System.out.println("============================================================================");
             // System.out.println(
             // "อายุปัจจุบันตอนเดือนมิถุนายน " + ageYears + " ปี " + ageMonths + " เดือน " +
             // ageDays + " วัน");
