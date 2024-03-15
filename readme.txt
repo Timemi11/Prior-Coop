@@ -1,11 +1,11 @@
 วิธีการรัน
-กรณีใน vscode run แล้ว ไม่รับ input ภาษาไทย ให้ทำตามนี้
+กรณีใน vscode run แล้ว ไม่รับ input ภาษาไทย ให้ทำตามนี้ครับ
 
-1.เปิด cmd 
-2.cd เข้าไปยังโฟล์เดอร์ prior_lasted
+1.เปิด command prompt ใน folder prior_lasted ครับ 
+2.cd เข้าไปยังโฟล์เดอร์ prior_lasted ถ้ายังไม่ได้เข้า
 3.พิมพ์ javac Vaccine.java กด enter
 4.พิมพ์ java Vaccine กด enter
-5.ใส่ข้อมูล input ตาม testcase ได้เลย
+5.ใส่ข้อมูล input ตาม testcase ครับ
 
 
 

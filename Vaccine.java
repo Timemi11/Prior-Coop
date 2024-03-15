@@ -1,3 +1,4 @@
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -6,6 +7,7 @@ import java.util.Scanner;
 
 public class Vaccine {
 
+    @SuppressWarnings("deprecation")
     private static LocalDate parseDate(String dateString) {
         // ทำการแปลงค่าตัวเลขที่ใส่เข้ามาในรูปแบบเช่น 1 มิถุนายน พ.ศ.2522 ==> 2522-6-1
 
@@ -13,6 +15,7 @@ public class Vaccine {
         return LocalDate.parse(dateString, formatter);
     }
 
+    @SuppressWarnings("deprecation")
     private static String formatDate(LocalDate date) {
         // ทำการแปลงค่าตัวเลขที่ใส่เข้ามาในรูปแบบเช่น 2522-6-1 ==> 1 มิถุนายน พ.ศ.2522
         int yyyy = date.getYear() + 543;
@@ -24,7 +27,7 @@ public class Vaccine {
     public static void main(String[] args) {
 
         // ====================ส่วน input และ กำหนดวันเข้ารับวัคซีน ====================
-        Scanner in = new Scanner(System.in);
+        Scanner in = new Scanner(System.in, "UTF-8");
         String const_start_service = "1 มิถุนายน พ.ศ.2021";
         String const_end_service = "31 สิงหาคม พ.ศ.2021";
         String startservice = "1 มิถุนายน พ.ศ.2021";
@@ -36,6 +39,8 @@ public class Vaccine {
         // int ageYears = 0;
 
         // ====================จบส่วนinput และกำหนดวันเข้ารับวัคซีน ====================
+
+        // ==================== ส่วนเช็คค่า input ที่ใส่เข้ามา ====================
         System.out.println("============================================================================");
         System.out.println("     ช่วงให้บริการรับวัคซีน" + " " + formatDate(parseDate(const_start_service)) + " - "
                 + formatDate(parseDate(const_end_service)));
@@ -43,9 +48,8 @@ public class Vaccine {
         System.out.println("    [โปรดกรอกข้อมูล เช่น \"หญิง เกิดวันเสาร์ที่ 10 มีนาคม พ.ศ.2545\"] ");
         System.out.println("============================================================================");
 
-        // ==================== ส่วนเช็คค่า input ที่ใส่เข้ามา ====================
         while (notify.equals("")) {
-            System.out.print("Input >> ");
+            System.out.print("Input Parameter >> ");
             String gender = in.next();
             String dateofbirth = in.nextLine();
             String dd, MMMM, yyyy;
@@ -104,19 +108,15 @@ public class Vaccine {
             // ค่าที่ใส่เป็นปีที่มี 29 กุมภาพันธ์
             // boolean leapyear = date1.isLeapYear();
             // System.out.println(leapyear);
-
             // ageDays = period.getDays();
             // ageMonths = period.getMonths();
             // ageYears = period.getYears();
-
             // เช็คอายุตั้งแต่เดือนมิถุนายน [debug]
             // System.out.println("อายุใน 1 มิถุนายน 2564");
             // System.out.println(period.getDays() + "วัน");
             // System.out.println(period.getMonths() + "เดือน");
             // System.out.println(period.getYears() + "ปี");
-
             // ================================ส่วนกำหนดค่าตัวแปรที่นำไปใช้คำนวณ================================
-
             // นำ ว/ด/ปี มาเก็บเอาไว้ในตัวแปร ซึ่งอยู่ในรูปแบบตัวเลข เช่น 2002-09-02
             LocalDate date1 = parseDate(dateofbirth);// แปลงวันเป็นรูปแบบ yyyy-mm-dd เพื่อใช้คำนวณต่อ
             LocalDate date2 = parseDate(startservice);
@@ -154,7 +154,7 @@ public class Vaccine {
                         break;
                     }
                 } else if ((period.getYears() == 64 && period.getMonths() == 10) // ถ้าอายุ64ปี
-                                                                                 // ที่เกิดเดือนมิถุนายนขึ้นไปเข้าเงื่อนไขคนที่อายุกำลังเข้าเกณฑ์ในช่วงรับวัคซีน
+                        // ที่เกิดเดือนมิถุนายนขึ้นไปเข้าเงื่อนไขคนที่อายุกำลังเข้าเกณฑ์ในช่วงรับวัคซีน
                         || (period.getYears() == 64 && period.getMonths() == 11)) {
 
                     // บวกปีเพิ่มขึ้นไปจนอายุครบ 65 ปี จากนั่นเช็คว่ายังอยู่ในช่วงรับวัคซีนหรือไม่
@@ -263,6 +263,7 @@ public class Vaccine {
             // "อายุปัจจุบันตอนเดือนมิถุนายน " + ageYears + " ปี " + ageMonths + " เดือน " +
             // ageDays + " วัน");
         }
+
         // ================================จบส่วนแสดงข้อมูลวันที่รับวัคซีนและวันที่เข้ารับบริการ================================
 
         in.close();
